@@ -2,7 +2,7 @@ let currentFocus = -1;
 
 // 예상 검색어 데이터 로드 함수
 async function loadSuggestions() {
-    const response = await fetch('data.json');
+    const response = await fetch('data.json');  // data.json을 사용
     const data = await response.json();
     return data;
 }
@@ -46,32 +46,28 @@ async function showSuggestions() {
         suggestionsDiv.style.display = 'none';
     }
 
-    currentFocus = -1;  // 검색할 때마다 초기화
+    currentFocus = -1;
 }
 
 function handleKeyDown(event) {
     const suggestionsDiv = document.getElementById('suggestions');
     const items = suggestionsDiv.getElementsByTagName('div');
 
-    if (event.key === "ArrowDown") {
-        // 아래로 이동
-        currentFocus++;
-        addActive(items);
-    } else if (event.key === "ArrowUp") {
-        // 위로 이동
-        currentFocus--;
-        addActive(items);
-    } else if (event.key === "Enter") {
-        // 선택된 항목 입력
-        event.preventDefault();
-        if (currentFocus > -1) {
-            if (items) items[currentFocus].click();
-        }
-    } else if (event.key === "Tab") {
-        // Tab 키로 다음 항목으로 이동
+    if (event.key === "ArrowDown" || event.key === "Tab") {
+        // 아래 화살표 키나 Tab 키로 목록 이동
         event.preventDefault(); // 기본 Tab 동작 방지
         currentFocus++;
         addActive(items);
+    } else if (event.key === "ArrowUp") {
+        // 위 화살표 키로 목록 이동
+        currentFocus--;
+        addActive(items);
+    } else if (event.key === "Enter") {
+        event.preventDefault();
+        if (currentFocus > -1 && items.length > 0) {
+            // 목록에서 선택한 항목이 있을 때만 선택 처리
+            items[currentFocus].click();
+        }
     }
 }
 
@@ -81,6 +77,9 @@ function addActive(items) {
     if (currentFocus >= items.length) currentFocus = 0;
     if (currentFocus < 0) currentFocus = items.length - 1;
     items[currentFocus].classList.add("autocomplete-active");
+
+    // 선택된 항목을 입력란에 자동으로 채우기
+    document.getElementById('searchInput').value = items[currentFocus].textContent;
 }
 
 function removeActive(items) {
