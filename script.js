@@ -28,7 +28,7 @@ async function showSuggestions() {
     originalInput = searchInput;  // 사용자가 입력한 검색어를 저장
     const data = await loadSuggestions();
     const suggestions = data.map(entry => entry.term);
-    const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
+    const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(originalInput)); // 원래 검색어로 필터링
 
     if (filteredSuggestions.length > 0) {
         suggestionsDiv.innerHTML = '';
@@ -37,11 +37,11 @@ async function showSuggestions() {
             div.textContent = suggestion;
             div.setAttribute('data-index', index);
 
-            // 마우스 클릭 이벤트 추가
+            // 마우스 클릭 이벤트 추가 (자동 검색 실행 X)
             div.addEventListener('click', function() {
                 document.getElementById('searchInput').value = suggestion;
                 suggestionsDiv.style.display = 'none';
-                searchTerm(); // 클릭한 항목으로 검색 실행
+                currentFocus = -1;  // 포커스를 초기화하여 Tab 탐색이 처음부터 다시 시작되도록 설정
             });
 
             suggestionsDiv.appendChild(div);
@@ -71,6 +71,10 @@ function handleKeyDown(event) {
         addActive(items);
     } else if (event.key === "Enter") {
         event.preventDefault();
+        if (currentFocus > -1 && items.length > 0) {
+            // 추천 검색어를 선택한 상태에서 Enter를 누르면 해당 항목이 입력란에 채워짐
+            document.getElementById('searchInput').value = items[currentFocus].textContent;
+        }
         // Enter 키를 누르면 검색 실행
         searchTerm();
     }
@@ -83,8 +87,8 @@ function addActive(items) {
     if (currentFocus < 0) currentFocus = items.length - 1;
     items[currentFocus].classList.add("autocomplete-active");
 
-    // 선택된 항목을 입력란에 자동으로 채우지 않고, 원래 입력된 검색어 유지
-    document.getElementById('searchInput').value = originalInput;
+    // 선택된 항목을 입력란에 채우기
+    document.getElementById('searchInput').value = items[currentFocus].textContent;
 }
 
 function removeActive(items) {
