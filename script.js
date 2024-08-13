@@ -2,7 +2,7 @@ let currentFocus = -1;  // 현재 포커스된 추천 검색어의 인덱스
 let originalInput = '';  // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
 
 // Firestore와 Storage 초기화 (firebase가 정의되어 있어야 합니다)
-const db = firebase.firestore();
+// 중복된 `db` 변수를 제거합니다. firebase 초기화는 별도의 스크립트에서 이미 수행되었습니다.
 const storage = firebase.storage(); // Firebase Storage 초기화
 
 // 새 용어 추가 함수
@@ -20,7 +20,7 @@ async function addNewEntry() {
             imageUrl = await snapshot.ref.getDownloadURL();
         }
 
-        db.collection("dictionary").add({
+        firebase.firestore().collection("dictionary").add({
             term: term,
             definition: definition,
             imageUrl: imageUrl
@@ -53,7 +53,7 @@ function loadEntries() {
     const entriesDiv = document.getElementById('entries');
     entriesDiv.innerHTML = '';  // 기존 내용을 초기화합니다.
 
-    db.collection("dictionary").get().then((querySnapshot) => {
+    firebase.firestore().collection("dictionary").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const entry = doc.data();
             const entryDiv = document.createElement('div');
@@ -105,7 +105,7 @@ function editEntry(id, term, oldDefinition, oldImageUrl) {
 }
 
 function updateEntry(id, newDefinition, imageUrl) {
-    db.collection("dictionary").doc(id).update({
+    firebase.firestore().collection("dictionary").doc(id).update({
         definition: newDefinition,
         imageUrl: imageUrl
     })
@@ -121,7 +121,7 @@ function updateEntry(id, newDefinition, imageUrl) {
 // 용어 삭제 함수
 function deleteEntry(id) {
     if (confirm("Are you sure you want to delete this entry?")) {
-        db.collection("dictionary").doc(id).delete()
+        firebase.firestore().collection("dictionary").doc(id).delete()
         .then(() => {
             console.log("Entry deleted successfully");
             loadEntries();
