@@ -41,7 +41,7 @@ async function showSuggestions() {
         });
         suggestionsDiv.style.display = 'block';
 
-        currentFocus = -1;  // 추천 검색어가 다시 보여질 때 포커스를 초기화
+        currentFocus = -1;  // 포커스를 초기화하여 검색어 입력만 했을 때는 선택되지 않도록
     } else {
         suggestionsDiv.style.display = 'none';
     }
