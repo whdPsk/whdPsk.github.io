@@ -40,11 +40,14 @@ async function showSuggestions() {
             suggestionsDiv.appendChild(div);
         });
         suggestionsDiv.style.display = 'block';
+
+        // 검색창에 입력된 글자가 추천 검색어 목록에 있을 때 첫 번째 추천 항목 선택
+        currentFocus = 0;
+        addActive(suggestionsDiv.getElementsByTagName('div'));
     } else {
         suggestionsDiv.style.display = 'none';
     }
 
-    currentFocus = -1;
 }
 
 function handleKeyDown(event) {
