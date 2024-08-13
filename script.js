@@ -5,9 +5,9 @@ async function loadData() {
     return data;
 }
 
-//예상 검색어 보여주기
+// 예상 검색어 보여주기
 async function showSuggestions() {
-    const serachInput = document.getElementById('searchInput').value.trim().toLowerCase();
+    const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
     const suggestionsDiv = document.getElementById('suggestions');
 
     if (searchInput.length === 0) {
@@ -19,7 +19,7 @@ async function showSuggestions() {
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
 
     if (filteredSuggestions.length > 0) {
-        suggetsionsDiv.intterHTML = '';
+        suggestionsDiv.innerHTML = '';  // 수정: intterHTML -> innerHTML
         filteredSuggestions.forEach(suggestion => {
             const div = document.createElement('div');
             div.textContent = suggestion;
