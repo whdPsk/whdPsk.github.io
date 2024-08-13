@@ -1,3 +1,10 @@
+// 예상 검색어 데이터 로드 함수
+async function loadSuggestions() {
+    const response = await fetch('suggestions.json');
+    const data = await response.json();
+    return data;
+}
+
 // 데이터 로드 함수
 async function loadData() {
     const response = await fetch('data.json');
@@ -19,7 +26,7 @@ async function showSuggestions() {
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
 
     if (filteredSuggestions.length > 0) {
-        suggestionsDiv.innerHTML = '';  // 수정: intterHTML -> innerHTML
+        suggestionsDiv.innerHTML = '';
         filteredSuggestions.forEach(suggestion => {
             const div = document.createElement('div');
             div.textContent = suggestion;
