@@ -28,17 +28,105 @@
 
         // Firestore 초기화
         const db = firebase.firestore();
+
+        // 새 용어 추가 함수
+        function addNewEntry() {
+            const term = document.getElementById('newTerm').value;
+            const definition = document.getElementById('newDefinition').value;
+
+            if (term && definition) {
+                db.collection("dictionary").add({
+                    term: term,
+                    definition: definition
+                })
+                .then(() => {
+                    console.log("Entry added successfully");
+                    loadEntries();  // 새로고침 없이 추가된 내용을 표시하기 위해 데이터를 다시 로드합니다.
+                })
+                .catch((error) => {
+                    console.error("Error adding entry: ", error);
+                });
+            } else {
+                alert("Please enter both term and definition.");
+            }
+        }
+
+        // 기존 용어 목록 로드 함수
+        function loadEntries() {
+            const entriesDiv = document.getElementById('entries');
+            entriesDiv.innerHTML = '';  // 기존 내용을 초기화합니다.
+
+            db.collection("dictionary").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const entry = doc.data();
+                    const entryDiv = document.createElement('div');
+                    entryDiv.textContent = `${entry.term}: ${entry.definition}`;
+                    
+                    // 수정 및 삭제 버튼 추가
+                    const editButton = document.createElement('button');
+                    editButton.textContent = "Edit";
+                    editButton.onclick = () => editEntry(doc.id, entry.term, entry.definition);
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = "Delete";
+                    deleteButton.onclick = () => deleteEntry(doc.id);
+
+                    entryDiv.appendChild(editButton);
+                    entryDiv.appendChild(deleteButton);
+                    entriesDiv.appendChild(entryDiv);
+                });
+            });
+        }
+
+        // 용어 수정 함수
+        function editEntry(id, term, oldDefinition) {
+            const newDefinition = prompt(`Edit definition for ${term}:`, oldDefinition);
+            
+            if (newDefinition !== null) {
+                db.collection("dictionary").doc(id).update({
+                    definition: newDefinition
+                })
+                .then(() => {
+                    console.log("Entry updated successfully");
+                    loadEntries();
+                })
+                .catch((error) => {
+                    console.error("Error updating entry: ", error);
+                });
+            }
+        }
+
+        // 용어 삭제 함수
+        function deleteEntry(id) {
+            if (confirm("Are you sure you want to delete this entry?")) {
+                db.collection("dictionary").doc(id).delete()
+                .then(() => {
+                    console.log("Entry deleted successfully");
+                    loadEntries();
+                })
+                .catch((error) => {
+                    console.error("Error deleting entry: ", error);
+                });
+            }
+        }
+
+        // 페이지가 로드될 때 기존 항목을 로드합니다.
+        window.onload = loadEntries;
     </script>
 </head>
 <body>
     <div class="container">
-        <h1>Dictionary</h1>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search for a term..." oninput="showSuggestions()" onkeydown="handleKeyDown(event)">
-            <button onclick="searchTerm()" class="search-button">Search</button>
+        <h1>Simple Dictionary</h1>
+        
+        <!-- 새 용어 추가 폼 -->
+        <div>
+            <input type="text" id="newTerm" placeholder="New Term">
+            <input type="text" id="newDefinition" placeholder="Definition">
+            <button onclick="addNewEntry()">Add Entry</button>
         </div>
-        <div id="suggestions"></div>
-        <div id="result"></div>
+        
+        <!-- 기존 용어 목록 -->
+        <div id="entries"></div>
     </div>
 
     <!-- Firebase와 상호작용하는 JavaScript 파일 로드 -->
