@@ -34,11 +34,6 @@ async function showSuggestions() {
             const div = document.createElement('div');
             div.textContent = suggestion;
             div.setAttribute('data-index', index);
-            div.onclick = function() {
-                document.getElementById('searchInput').value = suggestion;
-                suggestionsDiv.style.display = 'none';
-                currentFocus = -1;
-            };
             suggestionsDiv.appendChild(div);
         });
         suggestionsDiv.style.display = 'block';
@@ -64,13 +59,8 @@ function handleKeyDown(event) {
         addActive(items);
     } else if (event.key === "Enter") {
         event.preventDefault();
-        if (currentFocus > -1 && items.length > 0) {
-            // 목록에서 선택한 항목이 있을 때만 선택 처리
-            items[currentFocus].click();
-        } else {
-            // 목록에서 항목이 선택되지 않았을 때 검색 실행
-            searchTerm();
-        }
+        // Enter 키를 누르면 검색 실행
+        searchTerm();
     }
 }
 
