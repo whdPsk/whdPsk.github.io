@@ -21,25 +21,33 @@ h1 {
     text-align: center;
 }
 
+/* 검색창과 검색 버튼을 포함하는 컨테이너 */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 #searchInput {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 5px 0 0 5px;
+    border-right: none;
+    outline: none;
 }
 
-button {
-    width: 100%;
+/* 검색 버튼을 검색창 옆에 배치 */
+.search-button {
     padding: 10px;
     background-color: #007BFF;
     color: white;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid #007BFF;
+    border-radius: 0 5px 5px 0;
     cursor: pointer;
 }
 
-button:hover {
+.search-button:hover {
     background-color: #0056b3;
 }
 
@@ -47,9 +55,10 @@ button:hover {
     margin-top: 20px;
 }
 
+/* 추천 검색어 스타일 */
 #suggestions {
     border: 1px solid #ccc;
-    backgound-color: white;
+    background-color: white;
     max-height: 150px;
     overflow-y: auto;
     position: absolute;
@@ -64,7 +73,7 @@ button:hover {
 }
 
 #suggestions div:hover {
-    backgound-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .autocomplete-active {
