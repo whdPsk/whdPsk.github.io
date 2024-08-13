@@ -56,22 +56,25 @@ function handleKeyDown(event) {
         event.preventDefault(); // 기본 Tab 동작 방지
         currentFocus++;
         if (currentFocus >= items.length) currentFocus = 0; // 마지막 항목에서 다시 첫 번째 항목으로
-        addActive(items);
+        addActive(items);  // 추천 검색어 항목을 활성화
     } else if (event.key === "ArrowUp") {
         // 위 화살표 키로 목록 이동
         event.preventDefault(); // 기본 Tab 동작 방지
         currentFocus--;
-        if (currentFocus < 0) currentFocus = items.length - 1; // 첫 항목에서 마지막 항목으로
-        addActive(items);
-    } else if (event.key === "Enter") {
-        event.preventDefault();
+        if (currentFocus < 0) currentFocus = items.length - 1; // 첫 항목에서 마지막 항목으로 이동
+        addActive(items);  // 추천 검색어 항목을 활성화
+    } else if (event.key === "Control") {
+        // Ctrl 키를 눌렀을 때만 검색창에 입력
         if (currentFocus > -1 && items.length > 0) {
-            // 추천 검색어를 선택한 상태에서 Enter를 누르면 해당 항목이 입력란에 채워짐
             document.getElementById('searchInput').value = items[currentFocus].textContent;
-            searchTerm();  // Enter 키를 누르면 검색 실행
         }
+    } else if (event.key === "Enter") {
+        // Enter 키로 검색 실행
+        event.preventDefault();
+        searchTerm();
     }
 }
+
 
 function addActive(items) {
     if (!items) return false;
