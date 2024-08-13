@@ -1,3 +1,12 @@
+let currentFocus = -1;
+
+// 예상 검색어 데이터 로드 함수
+async function loadSuggestions() {
+    const response = await fetch('data.json');
+    const data = await response.json();
+    return data;
+}
+
 // 데이터 로드 함수
 async function loadData() {
     const response = await fetch('data.json');
@@ -15,19 +24,20 @@ async function showSuggestions() {
         return;
     }
 
-    // `data.json`에서 직접 데이터를 가져와서 예상 검색어로 사용
-    const data = await loadData();
-    const suggestions = data.map(entry => entry.term); // 데이터의 'term' 필드만 사용
+    const data = await loadSuggestions();
+    const suggestions = data.map(entry => entry.term);
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
 
     if (filteredSuggestions.length > 0) {
         suggestionsDiv.innerHTML = '';
-        filteredSuggestions.forEach(suggestion => {
+        filteredSuggestions.forEach((suggestion, index) => {
             const div = document.createElement('div');
             div.textContent = suggestion;
+            div.setAttribute('data-index', index);
             div.onclick = function() {
                 document.getElementById('searchInput').value = suggestion;
                 suggestionsDiv.style.display = 'none';
+                currentFocus = -1;
             };
             suggestionsDiv.appendChild(div);
         });
@@ -35,7 +45,51 @@ async function showSuggestions() {
     } else {
         suggestionsDiv.style.display = 'none';
     }
+
+    currentFocus = -1;  // 검색할 때마다 초기화
 }
+
+function handleKeyDown(event) {
+    const suggestionsDiv = document.getElementById('suggestions');
+    const items = suggestionsDiv.getElementsByTagName('div');
+
+    if (event.key === "ArrowDown") {
+        // 아래로 이동
+        currentFocus++;
+        addActive(items);
+    } else if (event.key === "ArrowUp") {
+        // 위로 이동
+        currentFocus--;
+        addActive(items);
+    } else if (event.key === "Enter") {
+        // 선택된 항목 입력
+        event.preventDefault();
+        if (currentFocus > -1) {
+            if (items) items[currentFocus].click();
+        }
+    } else if (event.key === "Tab") {
+        // Tab 키로 다음 항목으로 이동
+        event.preventDefault(); // 기본 Tab 동작 방지
+        currentFocus++;
+        addActive(items);
+    }
+}
+
+function addActive(items) {
+    if (!items) return false;
+    removeActive(items);
+    if (currentFocus >= items.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = items.length - 1;
+    items[currentFocus].classList.add("autocomplete-active");
+}
+
+function removeActive(items) {
+    for (let i = 0; i < items.length; i++) {
+        items[i].classList.remove("autocomplete-active");
+    }
+}
+
+document.getElementById('searchInput').addEventListener('keydown', handleKeyDown);
 
 // 검색 함수
 async function searchTerm() {
