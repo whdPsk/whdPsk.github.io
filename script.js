@@ -67,6 +67,9 @@ function handleKeyDown(event) {
         if (currentFocus > -1 && items.length > 0) {
             // 목록에서 선택한 항목이 있을 때만 선택 처리
             items[currentFocus].click();
+        } else {
+            // 목록에서 항목이 선택되지 않았을 때 검색 실행
+            searchTerm();
         }
     }
 }
