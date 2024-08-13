@@ -7,9 +7,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Search Results</h1>
-        <div id="result"></div>
+    <div id="content">
+        <div id="firstHeading" class="firstHeading">
+            <h1 id="searchTermTitle">Search Results</h1>
+        </div>
+        <div id="bodyContent" class="bodyContent">
+            <div id="mw-content-text" class="mw-content-text">
+                <div id="result" class="search-result"></div>
+            </div>
+        </div>
     </div>
     <script>
         async function loadData() {
@@ -22,6 +28,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const query = urlParams.get('query').toLowerCase();
             const resultDiv = document.getElementById('result');
+            const searchTermTitle = document.getElementById('searchTermTitle');
             
             const data = await loadData();
             const found = data.filter(entry => entry.term.toLowerCase() === query);
@@ -29,8 +36,10 @@
             if (found.length > 0) {
                 const term = found[0].term;
                 const definition = found[0].definition;
-                resultDiv.innerHTML = `<h2>${term}</h2><p>${definition}</p>`;
+                searchTermTitle.textContent = term;
+                resultDiv.innerHTML = `<p>${definition}</p>`;
             } else {
+                searchTermTitle.textContent = "No results found";
                 resultDiv.innerHTML = `<p>No results found for "${query}".</p>`;
             }
         }
