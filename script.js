@@ -36,6 +36,14 @@ async function showSuggestions() {
             const div = document.createElement('div');
             div.textContent = suggestion;
             div.setAttribute('data-index', index);
+
+            // 마우스 클릭 이벤트 추가
+            div.addEventListener('click', function() {
+                document.getElementById('searchInput').value = suggestion;
+                suggestionsDiv.style.display = 'none';
+                searchTerm(); // 클릭한 항목으로 검색 실행
+            });
+
             suggestionsDiv.appendChild(div);
         });
         suggestionsDiv.style.display = 'block';
