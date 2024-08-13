@@ -26,7 +26,7 @@ async function showSuggestions() {
     if (filteredSuggestions.length > 0) {
         suggestionsDiv.innerHTML = '';  // 기존 추천 검색어 목록을 초기화
         filteredSuggestions.forEach((suggestion, index) => {
-            // 여기서 div 변수를 선언합니다.
+            // 여기서 suggestionDiv 변수를 선언합니다.
             const suggestionDiv = document.createElement('div');
             suggestionDiv.textContent = suggestion;
             suggestionDiv.setAttribute('data-index', index);
