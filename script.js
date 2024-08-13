@@ -109,3 +109,13 @@ function searchTerm() {
         window.location.href = `result.html?query=${encodeURIComponent(searchInput)}`;
     }
 }
+
+
+div.addEventListener('click', function() {
+    document.getElementById('searchInput').value = suggestion;
+    suggestionsDiv.style.display = 'none';
+    currentFocus = -1;  // 포커스를 초기화하여 Tab 탐색이 처음부터 다시 시작되도록 설정
+    searchTerm();  // 추천 검색어를 클릭하면 바로 검색 실행
+});
+
+
