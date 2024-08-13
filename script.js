@@ -24,21 +24,22 @@ async function showSuggestions() {
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(originalInput)); // 원래 검색어로 필터링
 
     if (filteredSuggestions.length > 0) {
-        suggestionsDiv.innerHTML = '';
+        suggestionsDiv.innerHTML = '';  // 기존 추천 검색어 목록을 초기화
         filteredSuggestions.forEach((suggestion, index) => {
-            const div = document.createElement('div'); // div 변수를 선언합니다.
-            div.textContent = suggestion;
-            div.setAttribute('data-index', index);
+            // 여기서 div 변수를 선언합니다.
+            const suggestionDiv = document.createElement('div');
+            suggestionDiv.textContent = suggestion;
+            suggestionDiv.setAttribute('data-index', index);
 
             // 마우스 클릭 이벤트 추가
-            div.addEventListener('click', function() {
+            suggestionDiv.addEventListener('click', function() {
                 document.getElementById('searchInput').value = suggestion;
                 suggestionsDiv.style.display = 'none';
                 currentFocus = -1;  // 포커스를 초기화하여 Tab 탐색이 처음부터 다시 시작되도록 설정
                 searchTerm();  // 추천 검색어를 클릭하면 바로 검색 실행
             });
 
-            suggestionsDiv.appendChild(div);
+            suggestionsDiv.appendChild(suggestionDiv);
         });
         suggestionsDiv.style.display = 'block';
 
