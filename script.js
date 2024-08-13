@@ -3,16 +3,27 @@ let originalInput = '';  // 사용자가 처음 입력한 검색어를 저장하
 
 // Firestore 초기화 (이미 Firebase 설정을 완료했다면 중복으로 할 필요는 없습니다)
 const db = firebase.firestore();
+const storage = firebase.storage(); // Firebase Storage 초기화
 
 // 새 용어 추가 함수
-function addNewEntry() {
+async function addNewEntry() {
     const term = document.getElementById('newTerm').value;
     const definition = document.getElementById('newDefinition').value;
+    const imageUpload = document.getElementById('imageUpload').files[0];
 
     if (term && definition) {
+        let imageUrl = '';
+
+        if (imageUpload) {
+            const storageRef = storage.ref().child('images/' + imageUpload.name);
+            const snapshot = await storageRef.put(imageUpload);
+            imageUrl = await snapshot.ref.getDownloadURL();
+        }
+
         db.collection("dictionary").add({
             term: term,
-            definition: definition
+            definition: definition,
+            imageUrl: imageUrl
         })
         .then(() => {
             console.log("Entry added successfully");
@@ -48,10 +59,17 @@ function loadEntries() {
             const entryDiv = document.createElement('div');
             entryDiv.textContent = `${entry.term}: ${entry.definition}`;
             
+            if (entry.imageUrl) {
+                const img = document.createElement('img');
+                img.src = entry.imageUrl;
+                img.style.maxWidth = '100%';
+                entryDiv.appendChild(img);
+            }
+
             // 수정 및 삭제 버튼 추가
             const editButton = document.createElement('button');
             editButton.textContent = "Edit";
-            editButton.onclick = () => editEntry(doc.id, entry.term, entry.definition);
+            editButton.onclick = () => editEntry(doc.id, entry.term, entry.definition, entry.imageUrl);
             
             const deleteButton = document.createElement('button');
             deleteButton.textContent = "Delete";
@@ -65,21 +83,39 @@ function loadEntries() {
 }
 
 // 용어 수정 함수
-function editEntry(id, term, oldDefinition) {
+function editEntry(id, term, oldDefinition, oldImageUrl) {
     const newDefinition = prompt(`Edit definition for ${term}:`, oldDefinition);
     
     if (newDefinition !== null) {
-        db.collection("dictionary").doc(id).update({
-            definition: newDefinition
-        })
-        .then(() => {
-            console.log("Entry updated successfully");
-            loadEntries();
-        })
-        .catch((error) => {
-            console.error("Error updating entry: ", error);
-        });
+        const imageUpload = document.getElementById('imageUpload').files[0];
+        let imageUrl = oldImageUrl;
+
+        if (imageUpload) {
+            const storageRef = storage.ref().child('images/' + imageUpload.name);
+            storageRef.put(imageUpload).then(snapshot => {
+                snapshot.ref.getDownloadURL().then(url => {
+                    imageUrl = url;
+                    updateEntry(id, newDefinition, imageUrl);
+                });
+            });
+        } else {
+            updateEntry(id, newDefinition, imageUrl);
+        }
     }
+}
+
+function updateEntry(id, newDefinition, imageUrl) {
+    db.collection("dictionary").doc(id).update({
+        definition: newDefinition,
+        imageUrl: imageUrl
+    })
+    .then(() => {
+        console.log("Entry updated successfully");
+        loadEntries();
+    })
+    .catch((error) => {
+        console.error("Error updating entry: ", error);
+    });
 }
 
 // 용어 삭제 함수
