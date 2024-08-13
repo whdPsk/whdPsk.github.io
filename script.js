@@ -93,11 +93,13 @@ function removeActive(items) {
 document.getElementById('searchInput').addEventListener('keydown', handleKeyDown);
 
 // 검색 함수 - 새로운 페이지로 이동하여 결과 출력
-async function searchTerm() {
+function searchTerm() {
     const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
     
     // 추천 검색어 박스 숨기기
-    document.getElementById('suggestions').style.display = 'none';
+    const suggestionsDiv = document.getElementById('suggestions');
+    suggestionsDiv.style.display = 'none';
+    suggestionsDiv.innerHTML = ''; // 추천 검색어 내용도 초기화
 
     if (searchInput) {
         // 검색어를 URL 파라미터로 전달하여 새로운 페이지로 이동
