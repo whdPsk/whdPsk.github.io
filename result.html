@@ -5,23 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Result</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase App (필수) -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+
+    <!-- Firestore를 사용하기 위해 필요한 Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+
+    <!-- Firebase Storage를 사용하기 위한 SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+
+    <!-- Firebase 초기화 스크립트 -->
+    <script>
+        // Firebase 설정 및 초기화
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnu1lmLugh8F26xphVkii9L6ywjNVOfPo",
+            authDomain: "laboratory-c658d.firebaseapp.com",
+            projectId: "laboratory-c658d",
+            storageBucket: "laboratory-c658d.appspot.com",
+            messagingSenderId: "1099037975468",
+            appId: "1:1099037975468:web:bbe19dd8bcb174dc75d009",
+            measurementId: "G-3VCLH4QGGH"
+        };
+
+        // Firebase 초기화
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+    </script>
 </head>
 <body>
     <div class="container">
         <h1 id="docTitle">Title</h1>
         <div id="docContent">Content</div>
-        <img id="docImage" src="" alt="" style="display:none; max-width:100%;"><br>
-        <div id="docTags">Tags: </div>
+        <img id="docImage" src="" alt="" style="display:none;">
+        <div id="docTags">Tags:</div>
 
         <button onclick="toggleEditForm()">Edit Document</button>
         <button onclick="deleteDocument()">Delete Document</button>
 
-        <!-- 문서 수정 폼 (기본적으로 숨김 처리) -->
+        <!-- 편집 폼 (처음엔 숨김 상태) -->
         <div id="editForm" style="display:none;">
-            <textarea id="editDocContent"></textarea><br>
-            <input type="file" id="editDocImageUpload" accept="image/*"><br>
-            <input type="text" id="editDocTags" placeholder="Tags (comma separated)"><br>
-            <button onclick="saveDocument()">Save Changes</button>
+            <input type="text" id="editTitle" placeholder="Edit Title">
+            <textarea id="editContent" placeholder="Edit Content"></textarea>
+            <input type="file" id="editImageUpload">
+            <input type="text" id="editTags" placeholder="Edit Tags (comma separated)">
+            <button onclick="saveEdits()">Save Changes</button>
         </div>
     </div>
 
