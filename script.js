@@ -1,9 +1,7 @@
 let currentFocus = -1;  // 현재 포커스된 추천 검색어의 인덱스
 let originalInput = '';  // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
 
-// Firestore 초기화 (이미 Firebase 설정을 완료했다면 중복으로 할 필요는 없습니다)
-const db = firebase.firestore();
-const storage = firebase.storage(); // Firebase Storage 초기화
+
 
 // 새 용어 추가 함수
 async function addNewEntry() {
