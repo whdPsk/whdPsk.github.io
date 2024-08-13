@@ -9,7 +9,8 @@
 <body>
     <div class="container">
         <h1>Simple Dictionary</h1>
-        <input type="text" id="searchInput" placeholder="Search for a term...">
+        <input type="text" id="searchInput" placeholder="Search for a term..." oninput="showSuggestions()">
+        <div di="suggestions"></div>
         <button onclick="searchTerm()">Search</button>
         <div id="result"></div>
     </div>
