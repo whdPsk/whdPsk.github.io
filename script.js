@@ -1,4 +1,4 @@
-let currentFocus = -1;
+let currentFocus = -1;  // 현재 포커스된 추천 검색어의 인덱스
 let originalInput = '';  // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
 
 // 예상 검색어 데이터 로드 함수
@@ -30,7 +30,7 @@ async function showSuggestions() {
             div.textContent = suggestion;
             div.setAttribute('data-index', index);
 
-            // 마우스 클릭 이벤트 추가 (자동 검색 실행 X)
+            // 마우스 클릭 이벤트 추가
             div.addEventListener('click', function() {
                 document.getElementById('searchInput').value = suggestion;
                 suggestionsDiv.style.display = 'none';
@@ -41,13 +41,10 @@ async function showSuggestions() {
         });
         suggestionsDiv.style.display = 'block';
 
-        // 검색창에 입력된 글자가 추천 검색어 목록에 있을 때 첫 번째 추천 항목 선택
-        currentFocus = 0;
-        addActive(suggestionsDiv.getElementsByTagName('div'));
+        currentFocus = -1;  // 추천 검색어가 다시 보여질 때 포커스를 초기화
     } else {
         suggestionsDiv.style.display = 'none';
     }
-
 }
 
 function handleKeyDown(event) {
@@ -62,6 +59,7 @@ function handleKeyDown(event) {
         addActive(items);
     } else if (event.key === "ArrowUp") {
         // 위 화살표 키로 목록 이동
+        event.preventDefault(); // 기본 Tab 동작 방지
         currentFocus--;
         if (currentFocus < 0) currentFocus = items.length - 1; // 첫 항목에서 마지막 항목으로
         addActive(items);
@@ -70,20 +68,19 @@ function handleKeyDown(event) {
         if (currentFocus > -1 && items.length > 0) {
             // 추천 검색어를 선택한 상태에서 Enter를 누르면 해당 항목이 입력란에 채워짐
             document.getElementById('searchInput').value = items[currentFocus].textContent;
+            searchTerm();  // Enter 키를 누르면 검색 실행
         }
-        // Enter 키를 누르면 검색 실행
-        searchTerm();
     }
 }
 
 function addActive(items) {
     if (!items) return false;
     removeActive(items);
-    if (currentFocus >= items.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = items.length - 1;
+    if (currentFocus >= items.length) currentFocus = 0; // 포커스가 마지막을 넘어서면 처음으로 돌아감
+    if (currentFocus < 0) currentFocus = items.length - 1; // 포커스가 처음을 넘어서면 마지막으로 이동
     items[currentFocus].classList.add("autocomplete-active");
 
-    // 선택된 항목을 입력란에 채우기
+    // 선택된 항목을 입력란에 자동으로 채우기
     document.getElementById('searchInput').value = items[currentFocus].textContent;
 }
 
