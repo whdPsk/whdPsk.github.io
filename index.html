@@ -3,33 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Dictionary</title>
+    <title>Your App Title</title>
+
+    <!-- Firebase App (필수) -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+
+    <!-- Firestore를 사용하기 위해 필요한 Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+
+    <!-- Firebase Storage를 사용하기 위한 SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+
+    <!-- Firebase 초기화 스크립트 -->
+    <script>
+        // Firebase 설정 및 초기화
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+        };
+
+        // Firebase 초기화
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+    </script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>Simple Dictionary</h1>
         
-        <!-- 검색 콘솔 -->
+        <!-- 새 용어 추가 폼 -->
+        <button onclick="toggleAddEntryForm()">Add New Term</button>
+        <div id="addEntryForm" style="display:none;">
+            <input type="text" id="newTerm" placeholder="New Term">
+            <input type="text" id="newDefinition" placeholder="Definition">
+            <input type="file" id="imageUpload">
+            <button onclick="addNewEntry()">Add Entry</button>
+        </div>
+        
+        <!-- 검색 기능 -->
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search for a term..." oninput="showSuggestions()" onkeydown="handleKeyDown(event)">
             <button onclick="searchTerm()" class="search-button">Search</button>
         </div>
-        
         <div id="suggestions"></div>
         <div id="result"></div>
 
-        <!-- 새 문서 추가 버튼 -->
-        <button onclick="toggleNewEntryForm()">Create New Document</button>
-
-        <!-- 새 문서 추가 폼 (기본적으로 숨김 처리) -->
-        <div id="newEntryForm" style="display:none;">
-            <input type="text" id="newDocTitle" placeholder="Document Title"><br>
-            <textarea id="newDocContent" placeholder="Content"></textarea><br>
-            <input type="file" id="newDocImageUpload" accept="image/*"><br>
-            <input type="text" id="newDocTags" placeholder="Tags (comma separated)"><br>
-            <button onclick="createNewDocument()">Create Document</button>
-        </div>
+        <!-- 기존 용어 목록 -->
+        <div id="entries"></div>
     </div>
 
     <script src="script.js"></script>
