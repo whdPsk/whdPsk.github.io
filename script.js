@@ -26,7 +26,7 @@ async function showSuggestions() {
     if (filteredSuggestions.length > 0) {
         suggestionsDiv.innerHTML = '';
         filteredSuggestions.forEach((suggestion, index) => {
-            const div = document.createElement('div');
+            const div = document.createElement('div'); // div 변수를 선언합니다.
             div.textContent = suggestion;
             div.setAttribute('data-index', index);
 
@@ -35,6 +35,7 @@ async function showSuggestions() {
                 document.getElementById('searchInput').value = suggestion;
                 suggestionsDiv.style.display = 'none';
                 currentFocus = -1;  // 포커스를 초기화하여 Tab 탐색이 처음부터 다시 시작되도록 설정
+                searchTerm();  // 추천 검색어를 클릭하면 바로 검색 실행
             });
 
             suggestionsDiv.appendChild(div);
@@ -75,7 +76,6 @@ function handleKeyDown(event) {
     }
 }
 
-
 function addActive(items) {
     if (!items) return false;
     removeActive(items);
@@ -83,8 +83,7 @@ function addActive(items) {
     if (currentFocus < 0) currentFocus = items.length - 1; // 포커스가 처음을 넘어서면 마지막으로 이동
     items[currentFocus].classList.add("autocomplete-active");
 
-    // 선택된 항목을 입력란에 자동으로 채우기
-    document.getElementById('searchInput').value = items[currentFocus].textContent;
+    // 선택된 항목을 입력란에 자동으로 채우기 (Ctrl 키를 누르지 않는 한 이 부분은 실행되지 않음)
 }
 
 function removeActive(items) {
@@ -109,13 +108,3 @@ function searchTerm() {
         window.location.href = `result.html?query=${encodeURIComponent(searchInput)}`;
     }
 }
-
-
-div.addEventListener('click', function() {
-    document.getElementById('searchInput').value = suggestion;
-    suggestionsDiv.style.display = 'none';
-    currentFocus = -1;  // 포커스를 초기화하여 Tab 탐색이 처음부터 다시 시작되도록 설정
-    searchTerm();  // 추천 검색어를 클릭하면 바로 검색 실행
-});
-
-
