@@ -17,12 +17,23 @@ function addNewEntry() {
         .then(() => {
             console.log("Entry added successfully");
             loadEntries();  // 새로고침 없이 추가된 내용을 표시하기 위해 데이터를 다시 로드합니다.
+            toggleAddEntryForm();  // 단어 추가 폼을 다시 숨깁니다.
         })
         .catch((error) => {
             console.error("Error adding entry: ", error);
         });
     } else {
         alert("Please enter both term and definition.");
+    }
+}
+
+// 새 용어 추가 폼을 보이거나 숨기는 함수
+function toggleAddEntryForm() {
+    const addEntryForm = document.getElementById('addEntryForm');
+    if (addEntryForm.style.display === 'none') {
+        addEntryForm.style.display = 'block';
+    } else {
+        addEntryForm.style.display = 'none';
     }
 }
 
