@@ -66,3 +66,8 @@ button:hover {
 #suggestions div:hover {
     backgound-color: #f0f0f0;
 }
+
+.autocomplete-active {
+    background-color: #007bff;
+    color: white;
+}
