@@ -80,3 +80,44 @@ h1 {
     background-color: #007bff;
     color: white;
 }
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+#content {
+    max-width: 800px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.firstHeading {
+    border-bottom: 2px solid #a2a9b1;
+    margin-bottom: 20px;
+}
+
+#firstHeading h1 {
+    font-size: 1.75em;
+    margin: 0;
+}
+
+.bodyContent {
+    margin-top: 20px;
+}
+
+.search-result p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #333;
+}
