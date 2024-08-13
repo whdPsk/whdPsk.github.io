@@ -1,0 +1,14 @@
+[
+    {
+        "term": "HTML",
+        "definition": "HTML stands for HyperText Markup Language. It is the standard language for creating web pages."
+    },
+    {
+        "term": "CSS",
+        "definition": "CSS stands for Cascading Style Sheets. It is used to style the layout of web pages."
+    },
+    {
+        "term": "JavaScript",
+        "definition": "JavaScript is a programming language that allows you to implement complex things on web pages."
+    }
+]
