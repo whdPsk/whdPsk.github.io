@@ -1,5 +1,5 @@
 let currentFocus = -1;
-let originalInput = ''; // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
+let originalInput = '';  // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
 
 // 예상 검색어 데이터 로드 함수
 async function loadSuggestions() {
@@ -25,7 +25,7 @@ async function showSuggestions() {
         return;
     }
 
-    originalInput = searchInput; // 사용자가 입력한 검색어를 저장
+    originalInput = searchInput;  // 사용자가 입력한 검색어를 저장
     const data = await loadSuggestions();
     const suggestions = data.map(entry => entry.term);
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
@@ -54,10 +54,12 @@ function handleKeyDown(event) {
         // 아래 화살표 키나 Tab 키로 목록 이동
         event.preventDefault(); // 기본 Tab 동작 방지
         currentFocus++;
+        if (currentFocus >= items.length) currentFocus = 0; // 마지막 항목에서 다시 첫 번째 항목으로
         addActive(items);
     } else if (event.key === "ArrowUp") {
         // 위 화살표 키로 목록 이동
         currentFocus--;
+        if (currentFocus < 0) currentFocus = items.length - 1; // 첫 항목에서 마지막 항목으로
         addActive(items);
     } else if (event.key === "Enter") {
         event.preventDefault();
