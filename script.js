@@ -1,10 +1,3 @@
-// 예상 검색어 데이터 로드 함수
-async function loadSuggestions() {
-    const response = await fetch('suggestions.json');
-    const data = await response.json();
-    return data;
-}
-
 // 데이터 로드 함수
 async function loadData() {
     const response = await fetch('data.json');
@@ -22,7 +15,9 @@ async function showSuggestions() {
         return;
     }
 
-    const suggestions = await loadSuggestions();
+    // `data.json`에서 직접 데이터를 가져와서 예상 검색어로 사용
+    const data = await loadData();
+    const suggestions = data.map(entry => entry.term); // 데이터의 'term' 필드만 사용
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
 
     if (filteredSuggestions.length > 0) {
