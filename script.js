@@ -1,4 +1,5 @@
 let currentFocus = -1;
+let originalInput = ''; // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
 
 // 예상 검색어 데이터 로드 함수
 async function loadSuggestions() {
@@ -24,6 +25,7 @@ async function showSuggestions() {
         return;
     }
 
+    originalInput = searchInput; // 사용자가 입력한 검색어를 저장
     const data = await loadSuggestions();
     const suggestions = data.map(entry => entry.term);
     const filteredSuggestions = suggestions.filter(term => term.toLowerCase().includes(searchInput));
@@ -71,8 +73,8 @@ function addActive(items) {
     if (currentFocus < 0) currentFocus = items.length - 1;
     items[currentFocus].classList.add("autocomplete-active");
 
-    // 선택된 항목을 입력란에 자동으로 채우기
-    document.getElementById('searchInput').value = items[currentFocus].textContent;
+    // 선택된 항목을 입력란에 자동으로 채우지 않고, 원래 입력된 검색어 유지
+    document.getElementById('searchInput').value = originalInput;
 }
 
 function removeActive(items) {
