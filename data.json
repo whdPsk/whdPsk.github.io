@@ -10,5 +10,9 @@
     {
         "term": "JavaScript",
         "definition": "JavaScript is a programming language that allows you to implement complex things on web pages."
+    },
+    {
+        "term": "Javatest",
+        "definition": "This is Javatest"
     }
 ]
