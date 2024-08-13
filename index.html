@@ -9,9 +9,11 @@
 <body>
     <div class="container">
         <h1>Simple Dictionary</h1>
-        <input type="text" id="searchInput" placeholder="Search for a term..." oninput="showSuggestions()" onkeydown="handleKeyDown(event)">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for a term..." oninput="showSuggestions()" onkeydown="handleKeyDown(event)">
+            <button onclick="searchTerm()" class="search-button">Search</button>
+        </div>
         <div id="suggestions"></div>
-        <button onclick="searchTerm()">Search</button>
         <div id="result"></div>
     </div>
     <script src="script.js"></script>
