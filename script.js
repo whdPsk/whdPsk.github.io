@@ -1,6 +1,90 @@
 let currentFocus = -1;  // 현재 포커스된 추천 검색어의 인덱스
 let originalInput = '';  // 사용자가 처음 입력한 검색어를 저장하기 위한 변수
 
+// Firestore 초기화 (이미 Firebase 설정을 완료했다면 중복으로 할 필요는 없습니다)
+const db = firebase.firestore();
+
+// 새 용어 추가 함수
+function addNewEntry() {
+    const term = document.getElementById('newTerm').value;
+    const definition = document.getElementById('newDefinition').value;
+
+    if (term && definition) {
+        db.collection("dictionary").add({
+            term: term,
+            definition: definition
+        })
+        .then(() => {
+            console.log("Entry added successfully");
+            loadEntries();  // 새로고침 없이 추가된 내용을 표시하기 위해 데이터를 다시 로드합니다.
+        })
+        .catch((error) => {
+            console.error("Error adding entry: ", error);
+        });
+    } else {
+        alert("Please enter both term and definition.");
+    }
+}
+
+// 기존 용어 목록 로드 함수
+function loadEntries() {
+    const entriesDiv = document.getElementById('entries');
+    entriesDiv.innerHTML = '';  // 기존 내용을 초기화합니다.
+
+    db.collection("dictionary").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const entry = doc.data();
+            const entryDiv = document.createElement('div');
+            entryDiv.textContent = `${entry.term}: ${entry.definition}`;
+            
+            // 수정 및 삭제 버튼 추가
+            const editButton = document.createElement('button');
+            editButton.textContent = "Edit";
+            editButton.onclick = () => editEntry(doc.id, entry.term, entry.definition);
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => deleteEntry(doc.id);
+
+            entryDiv.appendChild(editButton);
+            entryDiv.appendChild(deleteButton);
+            entriesDiv.appendChild(entryDiv);
+        });
+    });
+}
+
+// 용어 수정 함수
+function editEntry(id, term, oldDefinition) {
+    const newDefinition = prompt(`Edit definition for ${term}:`, oldDefinition);
+    
+    if (newDefinition !== null) {
+        db.collection("dictionary").doc(id).update({
+            definition: newDefinition
+        })
+        .then(() => {
+            console.log("Entry updated successfully");
+            loadEntries();
+        })
+        .catch((error) => {
+            console.error("Error updating entry: ", error);
+        });
+    }
+}
+
+// 용어 삭제 함수
+function deleteEntry(id) {
+    if (confirm("Are you sure you want to delete this entry?")) {
+        db.collection("dictionary").doc(id).delete()
+        .then(() => {
+            console.log("Entry deleted successfully");
+            loadEntries();
+        })
+        .catch((error) => {
+            console.error("Error deleting entry: ", error);
+        });
+    }
+}
+
 // 예상 검색어 데이터 로드 함수
 async function loadSuggestions() {
     const response = await fetch('data.json');  // data.json을 사용
@@ -109,3 +193,6 @@ function searchTerm() {
         window.location.href = `result.html?query=${encodeURIComponent(searchInput)}`;
     }
 }
+
+// 페이지가 로드될 때 기존 항목을 로드합니다.
+window.onload = loadEntries;
