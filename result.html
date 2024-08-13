@@ -3,49 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratory</title>
+    <title>Document Result</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="content">
-        <div id="firstHeading" class="firstHeading">
-            <h1 id="searchTermTitle">Search Results</h1>
-        </div>
-        <div id="bodyContent" class="bodyContent">
-            <div id="mw-content-text" class="mw-content-text">
-                <div id="result" class="search-result"></div>
-            </div>
+    <div class="container">
+        <h1 id="docTitle">Title</h1>
+        <div id="docContent">Content</div>
+        <img id="docImage" src="" alt="" style="display:none; max-width:100%;"><br>
+        <div id="docTags">Tags: </div>
+
+        <button onclick="toggleEditForm()">Edit Document</button>
+        <button onclick="deleteDocument()">Delete Document</button>
+
+        <!-- 문서 수정 폼 (기본적으로 숨김 처리) -->
+        <div id="editForm" style="display:none;">
+            <textarea id="editDocContent"></textarea><br>
+            <input type="file" id="editDocImageUpload" accept="image/*"><br>
+            <input type="text" id="editDocTags" placeholder="Tags (comma separated)"><br>
+            <button onclick="saveDocument()">Save Changes</button>
         </div>
     </div>
-    <script>
-        async function loadData() {
-            const response = await fetch('data.json');
-            const data = await response.json();
-            return data;
-        }
 
-        async function displayResult() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const query = urlParams.get('query').toLowerCase();
-            const resultDiv = document.getElementById('result');
-            const searchTermTitle = document.getElementById('searchTermTitle');
-            
-            const data = await loadData();
-            const found = data.filter(entry => entry.term.toLowerCase() === query);
-
-            if (found.length > 0) {
-                const term = found[0].term;
-                const definition = found[0].definition;
-                searchTermTitle.textContent = term;
-                resultDiv.innerHTML = `<p>${definition}</p>`;
-            } else {
-                searchTermTitle.textContent = "No results found";
-                resultDiv.innerHTML = `<p>No results found for "${query}".</p>`;
-            }
-        }
-
-        // 페이지 로드 시 검색 결과 표시
-        window.onload = displayResult;
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
