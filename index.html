@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratory</title>
+    <title>Simple Dictionary</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Dictionary</h1>
+        <h1>Simple Dictionary</h1>
         
         <!-- 검색 콘솔 -->
         <div class="search-container">
@@ -24,8 +24,9 @@
 
         <!-- 새 용어 추가 폼 (기본적으로 숨김 처리) -->
         <div id="addEntryForm" style="display:none;">
-            <input type="text" id="newTerm" placeholder="New Term">
-            <input type="text" id="newDefinition" placeholder="Definition">
+            <input type="text" id="newTerm" placeholder="New Term"><br>
+            <textarea id="newDefinition" placeholder="Definition"></textarea><br>
+            <input type="file" id="imageUpload" accept="image/*"><br>
             <button onclick="addNewEntry()">Add Entry</button>
         </div>
 
